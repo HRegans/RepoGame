@@ -1,7 +1,7 @@
 namespace RepoGame_Library;
 public class Merchant : Player
 {
-    public string name {get; set;}
+    public string? Name {get; set;}
     public BarterMood Mood { get; set;}
 
     public double SellMarkup { get {
@@ -24,10 +24,21 @@ public class Merchant : Player
 
     public Merchant() : base() {
         Mood = BarterMood.Neutral;
+        Name = "John";
     }
 
-    public Merchant(string mood) : base() {
+    public Merchant(string name) : base() {
+        Mood = BarterMood.Neutral;
+        Name = name;
+    }
+
+    public Merchant(string name, string mood) : base() {
         try {
+            if (name != null) {
+                Name = name;
+            } else {
+                Name = "John";
+            }
             Mood = Enum.Parse<BarterMood>(mood, true);
         } catch (Exception) {
             System.Console.WriteLine("Bad mood label. Setting to neutral.");

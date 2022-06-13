@@ -6,8 +6,12 @@ public class Program {
         PlayerOne.Inventory.Add("Bicycle");
         List<Merchant> Market = CreateMerchants();
         Market[0].Inventory.Add("Television");
+        Market[1].Inventory.Add("Radio");
+        Market[2].Inventory.Add("Xbox");
         List<(string,double)> Catalog = new List<(string, double)>();
         Catalog.Add(("Television" , 50.0));
+        Catalog.Add(("Radio" , 35.0));
+        Catalog.Add(("Xbox" , 350.0));
 
     bool continueGame=true;
     do {
@@ -29,7 +33,7 @@ public class Program {
             break;
             case "3":
             Console.WriteLine("Checking out...");
-            checkOut(Market, PlayerOne);
+            checkOut(Market, PlayerOne, Catalog);
             break;
             case "4":
             Console.WriteLine("Quitting Game...");
@@ -41,23 +45,38 @@ public class Program {
             break;
         }} while(continueGame);
     }
-public static List<Merchant> CreateMerchants () {
-    List<Merchant> result = new List<Merchant>();
-    Merchant Merchant1 = new Merchant();
-    Merchant Merchant2 = new Merchant();
-    Merchant Merchant3 = new Merchant();
-    Merchant3.Mood = Enum.Parse<BarterMood>("Generous");
-    result.Add (Merchant1);
-    result.Add (Merchant2);
-    result.Add (Merchant3);
-    return result;
+    public static List<Merchant> CreateMerchants () {
+        List<Merchant> result = new List<Merchant>();
+        Merchant Merchant1 = new Merchant();
+        Merchant Merchant2 = new Merchant();
+        Merchant Merchant3 = new Merchant();
+        Merchant3.Mood = Enum.Parse<BarterMood>("Generous");
+        result.Add (Merchant1);
+        result.Add (Merchant2);
+        result.Add (Merchant3);
+        return result;
+    }
 
+    public static void ShowMerch(List<Merchant> Market) {
+        foreach (Merchant vendor in Market) {
+            if (vendor.Inventory.Count == 0) {
+                System.Console.WriteLine("Empty");
+            } else {
+                System.Console.WriteLine($"{vendor.Inventory[0]}");
+            }
+        }
+    }
 
-}
     public static void MakeSale(Player p, Merchant m, string itemLabel, List<(string label, double basePrice)> catalog) {
         
         (string label, double price) itemForSale = catalog.Find(item => item.label == itemLabel);
         double price = itemForSale.price * (1 + m.SellMarkup);
+
+        if ( !m.Inventory.Contains(itemLabel) ) {
+            System.Console.WriteLine("Merchant does not have the item.");
+            return;
+        }
+
         if (p.CheckPrice(price)) {
             p.Money -= price;
             m.Money += price;
@@ -81,8 +100,28 @@ public static List<Merchant> CreateMerchants () {
         }
 
     }
-    public static void checkOut(List<Merchant> Market, Player PlayerOne)
+    public static void checkOut(List<Merchant> Market, Player PlayerOne, List<(string, double)> catalog)
     {
-    
+        System.Console.WriteLine("Do you want to buy or sell? (Enter 1 for 'buy' or 2 for 'sell')");
+        string? buyOrSell = Console.ReadLine();
+
+        if (buyOrSell == "1") {
+            System.Console.WriteLine("What would you like to buy?");
+            // Display options
+            ShowMerch(Market);
+            string? product = Console.ReadLine();
+            if (product == null || product == "") {
+                System.Console.WriteLine("Invalid product name. Returning to menu...");
+                return;
+            }
+            Merchant? seller = Market.Find(vendor => vendor.Inventory.Contains(product));
+            MakeSale(PlayerOne, seller, product, catalog);
+        } else if (buyOrSell == "2") {
+            System.Console.WriteLine("What would you like to sell?");
+            string? product = Console.ReadLine();
+            // Merchant buying, Player selling
+        } else {
+            System.Console.WriteLine("Invalid selection. Returning to menu...");
+        }
     }
 }
