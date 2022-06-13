@@ -1,6 +1,7 @@
 namespace RepoGame_Library;
 public class Merchant : Player
 {
+    public string name {get; set;}
     public BarterMood Mood { get; set;}
 
     public double SellMarkup { get {
