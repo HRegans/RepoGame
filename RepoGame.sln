@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoGame_Console", "RepoGame_Console\RepoGame_Console.csproj", "{BFBB09A3-B898-4BA3-AA97-823536740D39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoGame_Library", "RepoGame_Library\RepoGame_Library.csproj", "{72775B0F-1D99-4AAD-8A5F-67DBE84AA783}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,15 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFBB09A3-B898-4BA3-AA97-823536740D39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFBB09A3-B898-4BA3-AA97-823536740D39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFBB09A3-B898-4BA3-AA97-823536740D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFBB09A3-B898-4BA3-AA97-823536740D39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72775B0F-1D99-4AAD-8A5F-67DBE84AA783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72775B0F-1D99-4AAD-8A5F-67DBE84AA783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72775B0F-1D99-4AAD-8A5F-67DBE84AA783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72775B0F-1D99-4AAD-8A5F-67DBE84AA783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
