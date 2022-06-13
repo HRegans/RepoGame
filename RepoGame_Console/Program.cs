@@ -2,6 +2,13 @@
 public class Program {
     public static void Main() {
         Console.WriteLine("Welcome to Money Grubbers Express!!! Enter the ______");
+        Player PlayerOne = new Player();
+        PlayerOne.Inventory.Add("Bicycle");
+        List<Merchant> Market = CreateMerchants();
+        Market[0].Inventory.Add("Television");
+        List<(string,double)> Catalog = new List<(string, double)>();
+        Catalog.Add(("Television" , 50.0));
+
     bool continueGame=true;
     do {
         Console.WriteLine("Press 1 to Check Inventory & Money");
@@ -14,15 +21,15 @@ public class Program {
         {
             case "1":
             Console.WriteLine("Checking inventory...");
-            checkInventory();
+            checkInventory(PlayerOne);
             break;
             case "2":
             Console.WriteLine("Checking the local markets...");
-            checkLocalmarkets();
+            checkLocalMarkets(Market);
             break;
             case "3":
             Console.WriteLine("Checking out...");
-            checkOut();
+            checkOut(Market, PlayerOne);
             break;
             case "4":
             Console.WriteLine("Quitting Game...");
@@ -34,7 +41,19 @@ public class Program {
             break;
         }} while(continueGame);
     }
+public static List<Merchant> CreateMerchants () {
+    List<Merchant> result = new List<Merchant>();
+    Merchant Merchant1 = new Merchant();
+    Merchant Merchant2 = new Merchant();
+    Merchant Merchant3 = new Merchant();
+    Merchant3.Mood = Enum.Parse<BarterMood>("Generous");
+    result.Add (Merchant1);
+    result.Add (Merchant2);
+    result.Add (Merchant3);
+    return result;
 
+
+}
     public static void MakeSale(Player p, Merchant m, string itemLabel, List<(string label, double basePrice)> catalog) {
         
         (string label, double price) itemForSale = catalog.Find(item => item.label == itemLabel);
@@ -47,7 +66,23 @@ public class Program {
         }
     }
 
-    public void checkInventory(){}
-    public void checkLocalmarkets(){}
-    public void checkOut(){}
+    public static void checkInventory(Player p){
+        Console.WriteLine($"Current money is {p.Money:C2}");
+        foreach (string Item in p.Inventory)
+        {
+            Console.WriteLine($"{Item}");
+        }
+    }
+    public static void checkLocalMarkets(List<Merchant> Market)
+    {
+        foreach (Merchant Vendor in Market){
+            Console.WriteLine($"{Vendor.Mood}");
+
+        }
+
+    }
+    public static void checkOut(List<Merchant> Market, Player PlayerOne)
+    {
+    
+    }
 }
