@@ -12,6 +12,7 @@ public class Program {
         Catalog.Add(("Television" , 50.0));
         Catalog.Add(("Radio" , 35.0));
         Catalog.Add(("Xbox" , 350.0));
+        Catalog.Add(("Bicycle" , 85.0));
 
     bool continueGame=true;
     do {
@@ -47,9 +48,11 @@ public class Program {
     }
     public static List<Merchant> CreateMerchants () {
         List<Merchant> result = new List<Merchant>();
-        Merchant Merchant1 = new Merchant();
-        Merchant Merchant2 = new Merchant();
-        Merchant Merchant3 = new Merchant();
+        Merchant Merchant1 = new Merchant("Gary");
+        Merchant1.Mood = Enum.Parse<BarterMood>("Neutral");
+        Merchant Merchant2 = new Merchant("Abdul");
+        Merchant2.Mood = Enum.Parse<BarterMood>("Stingy");
+        Merchant Merchant3 = new Merchant("Christine");
         Merchant3.Mood = Enum.Parse<BarterMood>("Generous");
         result.Add (Merchant1);
         result.Add (Merchant2);
@@ -67,7 +70,7 @@ public class Program {
         }
     }
 
-    public static void MakeSale(Player p, Merchant m, string itemLabel, List<(string label, double basePrice)> catalog) {
+    public static void MakeSalePlayer(Player p, Merchant m, string itemLabel, List<(string label, double basePrice)> catalog) {
         
         (string label, double price) itemForSale = catalog.Find(item => item.label == itemLabel);
         double price = itemForSale.price * (1 + m.SellMarkup);
@@ -82,6 +85,26 @@ public class Program {
             m.Money += price;
             m.Inventory.Remove(itemLabel);
             p.Inventory.Add(itemLabel);
+        } else{Console.WriteLine("Price is not good.");
+        }
+        
+    }
+
+    public static void MakeSaleMerchant(Merchant m, Player p, string itemLabel, List<(string label, double basePrice)> catalog) {
+        
+        (string label, double price) itemForSale = catalog.Find(item => item.label == itemLabel);
+        double price = itemForSale.price * (1 - m.BuyMarkdown);
+        if ( !p.Inventory.Contains(itemLabel) ) {
+            System.Console.WriteLine("Player does not have the item.");
+            return;
+        }
+
+        if (m.CheckPrice(price)) {
+            m.Money -= price;
+            p.Money += price;
+            p.Inventory.Remove(itemLabel);
+            m.Inventory.Add(itemLabel);
+        }else{Console.WriteLine("Price is not good.");
         }
     }
 
@@ -115,11 +138,14 @@ public class Program {
                 return;
             }
             Merchant? seller = Market.Find(vendor => vendor.Inventory.Contains(product));
-            MakeSale(PlayerOne, seller, product, catalog);
+            MakeSalePlayer(PlayerOne, seller, product, catalog);
         } else if (buyOrSell == "2") {
             System.Console.WriteLine("What would you like to sell?");
             string? product = Console.ReadLine();
-            // Merchant buying, Player selling
+            Console.WriteLine("Which Merchant would you like to sell to?");
+            string? name = Console.ReadLine();
+            Merchant? buyer = Market.Find(vendor => vendor.Name == name);
+            MakeSaleMerchant(buyer, PlayerOne, product, catalog);
         } else {
             System.Console.WriteLine("Invalid selection. Returning to menu...");
         }
