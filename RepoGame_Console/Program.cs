@@ -15,34 +15,25 @@ public class Program {
         // Game Setup, Three levels
         Player PlayerOne = new Player();
         PlayerOne.Inventory.Add("Bicycle");
+        PlayerOne.Inventory.Add("Xbox");
+        PlayerOne.Inventory.Add("Tent");
+        PlayerOne.Inventory.Add("Sunglasses");
+
         List<Merchant> CurrentCity=new List<Merchant>();
 
-        // Each city has new market of merchants -- need to create new market each time we travel
         // Possible mechanic -- 'cash-out' option at the end, where we get raw values of our remaining items, instead of selling them
-        // List<Merchant> Market = CreateMerchants();
-        // Market[0].Inventory.Add("Television");
-        // Market[1].Inventory.Add("Radio");
-        // Market[2].Inventory.Add("Xbox");
-        // Market[3].Inventory.Add("Tent")
-        // Market[4].Inventory.Add("Cellphone")
-        // Market[5].Inventory.Add("Nike Running Shoes")
-        // Market[6].Inventory.Add("Rare Pokemon Cards")
-        // Market[7].Inventory.Add("Sunglasses")
-        // Market[8].Inventory.Add("Skateboard")
-        // Market[9].Inventory.Add("Flashlight")
         
         // Universal -- items will have global prices, so catalog should only to be made once
-        // Or, items' values change depending on city?
         List<(string,double)> Catalog = new List<(string, double)>();
         Catalog.Add(("Television" , 50.0));
         Catalog.Add(("Radio" , 35.0));
         Catalog.Add(("Xbox" , 350.0));
         Catalog.Add(("Bicycle" , 85.0));
-        // Catalog.Add(("Tent" , 65.0));
+        Catalog.Add(("Tent" , 65.0));
         Catalog.Add(("Cellphone" , 650.0));
         Catalog.Add(("Nike Running Shoes" , 55.0));
         Catalog.Add(("Rare Pokemon Cards" , 135.0));
-        // Catalog.Add(("Sunglasses" , 50.0));
+        Catalog.Add(("Sunglasses" , 50.0));
         Catalog.Add(("Skateboard" , 125.0));
         Catalog.Add(("Flashlight" , 15.0));
         
@@ -90,6 +81,11 @@ public class Program {
             break;
             default:
             Console.WriteLine("Unable to travel");
+            // Cash-out player inventory
+            CashOutPlayer(PlayerOne, Catalog);
+            TallyFinalScore(PlayerOne.Money);
+            System.Console.WriteLine("--- Game Over ---");
+            continueGame = false;
             break;
             }
             TimesTraveled ++;
@@ -100,7 +96,7 @@ public class Program {
             break;
             default:
             continueGame=false;
-            Console.WriteLine("");
+            Console.WriteLine("Invalid input. Quitting game...");
             break;
         }} while(continueGame);
     }
@@ -148,13 +144,13 @@ public class Program {
         result.Add (Merchant1);
         return result;
     }
-    public static void ShowMerch(List<Merchant> Market) {
+    public static void ShowMerch(List<Merchant> Market, List<(string, double)> catalog) {
         foreach (Merchant vendor in Market) {
             System.Console.WriteLine($"{vendor.Name}'s stock:");
             if (vendor.Inventory.Count == 0) {
                 System.Console.WriteLine("- Empty");
             } else {
-                vendor.checkInventory();
+                vendor.checkInventory(catalog);
             }
         }
     }
@@ -218,13 +214,17 @@ public class Program {
         if (buyOrSell == "1") {
             System.Console.WriteLine("What would you like to buy?");
             // Display options
-            ShowMerch(Market);
+            ShowMerch(Market, catalog);
             string? product = Console.ReadLine();
             if (product == null || product == "") {
                 System.Console.WriteLine("Invalid product name. Returning to menu...");
                 return;
             }
             Merchant? seller = Market.Find(vendor => vendor.Inventory.Contains(product));
+            if (seller == null) {
+                System.Console.WriteLine("No merchant has that item.");
+                return;
+            }
             MakeSalePlayer(PlayerOne, seller, product, catalog);
         } else if (buyOrSell == "2") {
             System.Console.WriteLine("What would you like to sell?");
@@ -247,9 +247,34 @@ public class Program {
 
             string? name = Console.ReadLine();
             Merchant? buyer = Market.Find(vendor => vendor.Name == name);
+            if (buyer == null) {
+                System.Console.WriteLine("No merchant found by that name.");
+                return;
+            }
             MakeSaleMerchant(buyer, PlayerOne, playerItem, catalog);
         } else {
             System.Console.WriteLine("Invalid selection. Returning to menu...");
+            return;
+        }
+    }
+
+    public static void CashOutPlayer(Player playerOne, List<(string label, double basePrice)> catalog) {
+        System.Console.WriteLine("Cashing out your remaining inventory...");
+        foreach (string itemLabel in playerOne.Inventory) {
+            playerOne.Money += catalog.Find(item => item.label == itemLabel).basePrice;
+        }
+        System.Console.WriteLine($"You ended up with {playerOne.Money:C2}.");
+    }
+
+    public static void TallyFinalScore(double playerMoney) {
+        if (playerMoney >= 850.0) {
+            System.Console.WriteLine("#### Congrats! Gold Medal earned! ####");
+        } else if (playerMoney >= 650.0 && playerMoney < 850.0) {
+            System.Console.WriteLine("*** Not bad. Silver Medal earned! ***");
+        } else if (playerMoney >= 450.0 && playerMoney < 650.0) {
+            System.Console.WriteLine("-- Chump change. Bronze Medal earned. --");
+        } else {
+            System.Console.WriteLine("_ Better luck next time. _");
         }
     }
 }

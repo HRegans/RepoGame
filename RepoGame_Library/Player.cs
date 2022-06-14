@@ -7,7 +7,7 @@ public class Player
 
     public Player() {
         Inventory = new List<string>();
-        Money = 100.00;
+        Money = 250.00;
     }
 
     public bool CheckPrice(double price) {

@@ -49,10 +49,11 @@ public class Merchant : Player
         }
     }
 
-    public new void checkInventory(){
+    public void checkInventory(List<(string label, double basePrice)> catalog){
         foreach (string Item in Inventory)
         {
-            Console.WriteLine($"- {Item}");
+            double price = catalog.Find(item => item.label == Item).basePrice;
+            Console.WriteLine($"- {Item} {price:C2}");
         }
     }
 }
