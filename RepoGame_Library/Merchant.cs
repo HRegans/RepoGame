@@ -25,11 +25,13 @@ public class Merchant : Player
     public Merchant() : base() {
         Mood = BarterMood.Neutral;
         Name = "John";
+        Money = 10_000.00;
     }
 
     public Merchant(string name) : base() {
         Mood = BarterMood.Neutral;
         Name = name;
+        Money = 10_000.00;
     }
 
     public Merchant(string name, string mood) : base() {
@@ -39,10 +41,18 @@ public class Merchant : Player
             } else {
                 Name = "John";
             }
+            Money = 10_000.00;
             Mood = Enum.Parse<BarterMood>(mood, true);
         } catch (Exception) {
             System.Console.WriteLine("Bad mood label. Setting to neutral.");
             Mood = BarterMood.Neutral;
+        }
+    }
+
+    public new void checkInventory(){
+        foreach (string Item in Inventory)
+        {
+            Console.WriteLine($"- {Item}");
         }
     }
 }

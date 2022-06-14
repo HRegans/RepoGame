@@ -17,4 +17,12 @@ public class Player
             return true;
         }
     }
+
+    public void checkInventory(){
+        Console.WriteLine($"Current player money is {Money:C2}");
+        foreach (string Item in Inventory)
+        {
+            Console.WriteLine($"- {Item}");
+        }
+    }
 }
