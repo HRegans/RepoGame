@@ -93,7 +93,6 @@ public class Program {
             break;
             }
             TimesTraveled ++;
-           
             break;
             case "5":
             Console.WriteLine("Quitting Game...");
@@ -229,11 +228,26 @@ public class Program {
             MakeSalePlayer(PlayerOne, seller, product, catalog);
         } else if (buyOrSell == "2") {
             System.Console.WriteLine("What would you like to sell?");
+            PlayerOne.checkInventory();
             string? product = Console.ReadLine();
+            string playerItem;
+            if (product != "" || product != null) {
+            int index = Convert.ToInt32(product);
+            playerItem = PlayerOne.Inventory[index -1];
+            } else {
+            Console.WriteLine("Item not found.");
+            return;
+            }
+
             Console.WriteLine("Which Merchant would you like to sell to?");
+            foreach (Merchant Vendor in Market) 
+            {
+                Console.WriteLine($"{Vendor.Name}");
+            }
+
             string? name = Console.ReadLine();
             Merchant? buyer = Market.Find(vendor => vendor.Name == name);
-            MakeSaleMerchant(buyer, PlayerOne, product, catalog);
+            MakeSaleMerchant(buyer, PlayerOne, playerItem, catalog);
         } else {
             System.Console.WriteLine("Invalid selection. Returning to menu...");
         }

@@ -20,9 +20,11 @@ public class Player
 
     public void checkInventory(){
         Console.WriteLine($"Current player money is {Money:C2}");
+        int Counter = 1;
         foreach (string Item in Inventory)
         {
-            Console.WriteLine($"- {Item}");
+            Console.WriteLine($"{Counter} {Item}");
+            Counter ++;
         }
     }
 }
