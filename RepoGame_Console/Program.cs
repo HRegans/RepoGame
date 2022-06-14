@@ -1,21 +1,38 @@
 ﻿using RepoGame_Library;
 public class Program {
     public static void Main() {
-        Console.WriteLine("Welcome to Money Grubbers Express!!! Enter the ______");
+        Console.WriteLine("~~~~ Welcome to Money Grubbers Express ~~~~");
+
+        // Intro description...
+        // System.Console.WriteLine("");
+
+        System.Console.WriteLine("* Objective is to progress through each town and buy/sell " + 
+        "at the merchants in order to get the most money at the final destination.\n" + 
+        "* Each of the merchants will have a unique personality, so they may give you better or worse deals.\n" + 
+        "* Check out the markets to get a read on their moods.\n" + 
+        "* You will see a list of numbered options below, these will control your actions throughout the game.");
+
+        // Game Setup
         Player PlayerOne = new Player();
         PlayerOne.Inventory.Add("Bicycle");
+
+        // Each city has new market of merchants -- need to create new market each time we travel
+        // Possible mechanic -- 'cash-out' option at the end, where we get raw values of our remaining items, instead of selling them
         List<Merchant> Market = CreateMerchants();
         Market[0].Inventory.Add("Television");
         Market[1].Inventory.Add("Radio");
         Market[2].Inventory.Add("Xbox");
+
+        // Universal -- items will have global prices, so catalog should only to be made once
+        // Or, items' values change depending on city?
         List<(string,double)> Catalog = new List<(string, double)>();
         Catalog.Add(("Television" , 50.0));
         Catalog.Add(("Radio" , 35.0));
         Catalog.Add(("Xbox" , 350.0));
         Catalog.Add(("Bicycle" , 85.0));
 
-    bool continueGame=true;
-    do {
+        bool continueGame=true;
+        do {
         Console.WriteLine("Press 1 to Check Inventory & Money");
         Console.WriteLine("Press 2 to Checkout the local markets");
         Console.WriteLine("Press 3 to Make a purchase or a sale");
@@ -25,14 +42,18 @@ public class Program {
         switch (var)
         {
             case "1":
+            Console.Clear();
             Console.WriteLine("Checking inventory...");
-            checkInventory(PlayerOne);
+            PlayerOne.checkInventory();
+            Console.ReadKey();
             break;
             case "2":
             Console.WriteLine("Checking the local markets...");
             checkLocalMarkets(Market);
+            Console.ReadKey();
             break;
             case "3":
+            Console.Clear();
             Console.WriteLine("Checking out...");
             checkOut(Market, PlayerOne, Catalog);
             break;
@@ -62,10 +83,11 @@ public class Program {
 
     public static void ShowMerch(List<Merchant> Market) {
         foreach (Merchant vendor in Market) {
+            System.Console.WriteLine($"{vendor.Name}'s stock:");
             if (vendor.Inventory.Count == 0) {
-                System.Console.WriteLine("Empty");
+                System.Console.WriteLine("- Empty");
             } else {
-                System.Console.WriteLine($"{vendor.Inventory[0]}");
+                vendor.checkInventory();
             }
         }
     }
@@ -85,7 +107,8 @@ public class Program {
             m.Money += price;
             m.Inventory.Remove(itemLabel);
             p.Inventory.Add(itemLabel);
-        } else{Console.WriteLine("Price is not good.");
+        } else {
+            Console.WriteLine("Price is not good.");
         }
         
     }
@@ -94,6 +117,7 @@ public class Program {
         
         (string label, double price) itemForSale = catalog.Find(item => item.label == itemLabel);
         double price = itemForSale.price * (1 - m.BuyMarkdown);
+
         if ( !p.Inventory.Contains(itemLabel) ) {
             System.Console.WriteLine("Player does not have the item.");
             return;
@@ -108,21 +132,14 @@ public class Program {
         }
     }
 
-    public static void checkInventory(Player p){
-        Console.WriteLine($"Current money is {p.Money:C2}");
-        foreach (string Item in p.Inventory)
-        {
-            Console.WriteLine($"{Item}");
-        }
-    }
     public static void checkLocalMarkets(List<Merchant> Market)
     {
-        foreach (Merchant Vendor in Market){
-            Console.WriteLine($"{Vendor.Mood}");
-
+        // Too direct, give player hints instead
+        foreach (Merchant vendor in Market){
+            System.Console.WriteLine($"{vendor.Name} is {vendor.Mood}.");
         }
-
     }
+
     public static void checkOut(List<Merchant> Market, Player PlayerOne, List<(string, double)> catalog)
     {
         System.Console.WriteLine("Do you want to buy or sell? (Enter 1 for 'buy' or 2 for 'sell')");
