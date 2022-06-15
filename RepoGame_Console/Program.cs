@@ -4,16 +4,15 @@ public class Program {
         Console.BackgroundColor=ConsoleColor.DarkBlue;
         Console.WriteLine("~~~~ Welcome to Money Grubbers Express ~~~~");
 
-        Console.WriteLine(@"**********************************************************");
-        Console.WriteLine(@"*                                                       *");
-        Console.WriteLine(@"*      ____ ___   _____   ______      ____   ___ ___    *");
-        Console.WriteLine(@"*     |    |   | /     \ |       \   /  __] |   |   |   *");
-        Console.WriteLine(@"*     |  _   _ ||       ||   _    | /  [__  |   |   |   *");
-        Console.WriteLine(@"*     |   \_/  ||       ||    |   ||     _] |   ~   |  *");
-        Console.WriteLine(@"*     |    |   ||       ||    |   ||     [_ | ___,  |  *");
-        Console.WriteLine(@"*     |__  | __| \_____/ | __ | __||_______|| _____/  *");
-        Console.WriteLine(@"*                                                    *");
-        Console.WriteLine(@"***************************************************");
+        Console.WriteLine("**********************************************************************************************************************************");
+        Console.WriteLine(@"*      ________   _____   _______     ____   _______       _____ ______  ____ ___ ______   ____     ____  _____   ________       *");
+        Console.WriteLine(@"*     |    |   | /     \ |       \   /  __] |   |   |     /     ||     \ |   |   ||     \ |     \  /  __]|     \ /     __/       *");
+        Console.WriteLine(@"*     |  _   _ ||       ||   _    | /  [__  |   |   |    |   ___||   D  )    |   ||   O  )|   O  )/  [_  |   D  )(     \_        *");
+        Console.WriteLine(@"*     |   \_/  ||       ||    |   ||     _] |   ~   |    |  |   ||     / |   |   ||      ||      ||   _] |      \ \__    |       *");
+        Console.WriteLine(@"*     |    |   ||       ||    |   ||     [_ | ___,  |    |  |__ ||   _  \|   :   ||   O  ||   O  ||  [__ |   _   \ /     |       *");
+        Console.WriteLine(@"*     |__  | __| \_____/ | __ | __||_______|| _____/     |____,_||__| \__\ ____,_||______||_____ ||_____||___| \_| \____ |       *");
+        Console.WriteLine(@"*                                                                                                                                *");
+        Console.WriteLine("**********************************************************************************************************************************");
 
         System.Console.WriteLine("Money Grubber Express is a one player game where the player must sell or buy items from merchants in each city they travel to. " + 
         "\nThey will meet different merchants with different personalities that will impact their buying and selling...");
@@ -25,17 +24,22 @@ public class Program {
         "* You will see a list of numbered options below, these will control your actions throughout the game.\n"+
         "* Looks like there's nothing in this city. Travel to the next one to start your journey!");
 
-        // Game Setup, Three levels
-        // Player money is displayed after they make a purchase or sell
+        // 850 - 650 - 450
+        System.Console.WriteLine("\n*******************************");
+        System.Console.WriteLine("*         Ranking System      *");
+        System.Console.WriteLine("*******************************");
+        System.Console.WriteLine("*      Gold >>>> $850.00      *");
+        System.Console.WriteLine("*      Silver >>>> $650.00    *");
+        System.Console.WriteLine("*      Bronze >>>> $450.00    *");
+        System.Console.WriteLine("*******************************\n");
+
+        // Game Setup
         Player PlayerOne = new Player();
         PlayerOne.Inventory.Add("Bicycle");
         PlayerOne.Inventory.Add("Xbox");
         PlayerOne.Inventory.Add("Tent");
         PlayerOne.Inventory.Add("Sunglasses");
-
         List<Merchant> CurrentCity=new List<Merchant>();
-
-        // Possible mechanic -- 'cash-out' option at the end, where we get raw values of our remaining items, instead of selling them
         
         // Universal -- items will have global prices, so catalog should only to be made once
         List<(string,double)> Catalog = new List<(string, double)>{
@@ -48,13 +52,13 @@ public class Program {
         int TimesTraveled=0;
         bool continueGame=true;
         do {
-        Console.WriteLine("Press 1 to Check Inventory & Money");
+        Console.WriteLine("\nPress 1 to Check Inventory & Money");
         Console.WriteLine("Press 2 to Checkout the local markets");
         Console.WriteLine("Press 3 to Make a purchase or a sale");
         Console.WriteLine("Press 4 to Move to next city");
-        Console.WriteLine("Press 5 to Quit Game");
-        string? var=Console.ReadLine();
-        switch (var)
+        Console.WriteLine("Press 5 to Quit Game\n");
+        string? playerCommand=Console.ReadLine();
+        switch (playerCommand)
         {
             case "1":
             Console.Clear();
@@ -83,16 +87,18 @@ public class Program {
             {
             case 0:
             CurrentCity=CreateCityOne();
+            System.Console.WriteLine("Arrived at Austin, Texas.");
             break;
             case 1:
             CurrentCity=CreateCityTwo();
+            System.Console.WriteLine("Now in New York City.");
             break;
             case 2:
             CurrentCity=CreateCityThree();
+            System.Console.WriteLine("Made it to San Francisco, California.");
             break;
             default:
-            Console.WriteLine("Unable to travel");
-            // Cash-out player inventory
+            Console.WriteLine("Sorry, no airlines are running right now. Let's see how much profit you've made...");
             CashOutPlayer(PlayerOne, Catalog);
             TallyFinalScore(PlayerOne.Money);
             System.Console.WriteLine("--- Game Over ---");
@@ -116,14 +122,18 @@ public class Program {
         Merchant Merchant1 = new Merchant("Gary");
         Merchant1.Mood = Enum.Parse<BarterMood>("Neutral");
         Merchant1.Inventory.Add("Flashlight");
+        Merchant1.Inventory.Add("Bicycle");
+        Merchant1.Inventory.Add("Radio");
 
         Merchant Merchant2 = new Merchant("Abdul");
         Merchant2.Mood = Enum.Parse<BarterMood>("Stingy");
         Merchant2.Inventory.Add("Cellphone");
+        Merchant2.Inventory.Add("Sunglasses");
 
         Merchant Merchant3 = new Merchant("Christine");
         Merchant3.Mood = Enum.Parse<BarterMood>("Generous");
         Merchant3.Inventory.Add("Skateboard");
+        Merchant3.Inventory.Add("Sleeping Bag");
 
         result.Add (Merchant1);
         result.Add (Merchant2);
@@ -160,9 +170,9 @@ public class Program {
     }
     public static void ShowMerch(List<Merchant> Market, List<(string, double)> catalog) {
         foreach (Merchant vendor in Market) {
-            System.Console.WriteLine($"{vendor.Name}'s stock:");
+            System.Console.WriteLine($"\n{vendor.Name}'s stock:");
             if (vendor.Inventory.Count == 0) {
-                System.Console.WriteLine("- Empty");
+                System.Console.WriteLine("- Empty\n");
             } else {
                 vendor.checkInventory(catalog);
             }
@@ -206,6 +216,7 @@ public class Program {
             p.Money += price;
             p.Inventory.Remove(itemLabel);
             m.Inventory.Add(itemLabel);
+            Console.WriteLine($"Player Money: {p.Money:C2}");
         }else{Console.WriteLine("Price is not good.");
         }
     }
@@ -224,19 +235,22 @@ public class Program {
 
         if (buyOrSell == "1") {
             System.Console.WriteLine("What would you like to buy?");
-            // Display options
             ShowMerch(Market, catalog);
+
             string? product = Console.ReadLine();
+            
             if (product == null || product == "") {
-                System.Console.WriteLine("Invalid product name. Returning to menu...");
+                System.Console.WriteLine("Invalid product entered. Returning to menu...");
                 return;
             }
+
             Merchant? seller = Market.Find(vendor => vendor.Inventory.Contains(product));
-            if (seller == null) {
+            if (seller == null || seller == default) {
                 System.Console.WriteLine("No merchant has that item.");
                 return;
             }
             MakeSalePlayer(PlayerOne, seller, product, catalog);
+
         } else if (buyOrSell == "2") {
             System.Console.WriteLine("What would you like to sell?");
             Console.WriteLine("Enter the number of the item to select it.");
@@ -244,11 +258,11 @@ public class Program {
             string? product = Console.ReadLine();
             string playerItem;
             if (product != "" || product != null) {
-            int index = Convert.ToInt32(product);
-            playerItem = PlayerOne.Inventory[index -1];
+                int index = Convert.ToInt32(product);
+                playerItem = PlayerOne.Inventory[index -1];
             } else {
-            Console.WriteLine("Item not found.");
-            return;
+                Console.WriteLine("Item not found.");
+                return;
             }
 
             Console.WriteLine("Which Merchant would you like to sell to?");

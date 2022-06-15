@@ -50,10 +50,12 @@ public class Merchant : Player
     }
 
     public void checkInventory(List<(string label, double basePrice)> catalog){
+        int counter = 1;
         foreach (string Item in Inventory)
         {
             double price = catalog.Find(item => item.label == Item).basePrice;
-            Console.WriteLine($"- {Item} {price:C2}");
+            Console.WriteLine($"{counter} {Item} {price:C2}");
+            counter++;
         }
     }
 }
