@@ -1,18 +1,32 @@
 ﻿using RepoGame_Library;
 public class Program {
     public static void Main() {
+        Console.BackgroundColor=ConsoleColor.DarkBlue;
         Console.WriteLine("~~~~ Welcome to Money Grubbers Express ~~~~");
 
-        System.Console.WriteLine("Money Grubber Express is the one player game where a player must sell or buy items from merchants in each city he/she travels to. " + 
-        "\nHe/she will meet different merchants with different moods/personalities that will impact his buying and selling...");
+        Console.WriteLine(@"**********************************************************");
+        Console.WriteLine(@"*                                                       *");
+        Console.WriteLine(@"*      ____ ___   _____   ______      ____   ___ ___    *");
+        Console.WriteLine(@"*     |    |   | /     \ |       \   /  __] |   |   |   *");
+        Console.WriteLine(@"*     |  _   _ ||       ||   _    | /  [__  |   |   |   *");
+        Console.WriteLine(@"*     |   \_/  ||       ||    |   ||     _] |   ~   |  *");
+        Console.WriteLine(@"*     |    |   ||       ||    |   ||     [_ | ___,  |  *");
+        Console.WriteLine(@"*     |__  | __| \_____/ | __ | __||_______|| _____/  *");
+        Console.WriteLine(@"*                                                    *");
+        Console.WriteLine(@"***************************************************");
+
+        System.Console.WriteLine("Money Grubber Express is a one player game where the player must sell or buy items from merchants in each city they travel to. " + 
+        "\nThey will meet different merchants with different personalities that will impact their buying and selling...");
 
         System.Console.WriteLine("* Objective is to progress through each town and buy/sell " + 
         "at the merchants in order to get the most money at the final destination.\n" + 
         "* Each of the merchants will have a unique personality, so they may give you better or worse deals.\n" + 
         "* Check out the markets to get a read on their moods.\n" + 
-        "* You will see a list of numbered options below, these will control your actions throughout the game.");
+        "* You will see a list of numbered options below, these will control your actions throughout the game.\n"+
+        "* Looks like there's nothing in this city. Travel to the next one to start your journey!");
 
         // Game Setup, Three levels
+        // Player money is displayed after they make a purchase or sell
         Player PlayerOne = new Player();
         PlayerOne.Inventory.Add("Bicycle");
         PlayerOne.Inventory.Add("Xbox");
@@ -24,18 +38,12 @@ public class Program {
         // Possible mechanic -- 'cash-out' option at the end, where we get raw values of our remaining items, instead of selling them
         
         // Universal -- items will have global prices, so catalog should only to be made once
-        List<(string,double)> Catalog = new List<(string, double)>();
-        Catalog.Add(("Television" , 50.0));
-        Catalog.Add(("Radio" , 35.0));
-        Catalog.Add(("Xbox" , 350.0));
-        Catalog.Add(("Bicycle" , 85.0));
-        Catalog.Add(("Tent" , 65.0));
-        Catalog.Add(("Cellphone" , 650.0));
-        Catalog.Add(("Nike Running Shoes" , 55.0));
-        Catalog.Add(("Rare Pokemon Cards" , 135.0));
-        Catalog.Add(("Sunglasses" , 50.0));
-        Catalog.Add(("Skateboard" , 125.0));
-        Catalog.Add(("Flashlight" , 15.0));
+        List<(string,double)> Catalog = new List<(string, double)>{
+            ("Television" , 50.0), ("Radio" , 35.0), ("Xbox" , 350.0), ("Bicycle" , 85.0),
+            ("Tent" , 65.0), ("Cellphone" , 450.0), ("Nike Running Shoes" , 120.0), ("Sleeping Bag" , 85.00),
+            ("Rare Pokemon Cards" , 600.0), ("Sunglasses" , 50.0), ("Skateboard" , 180.0), ("Flashlight" , 15.0),
+            ("Telescope" , 350.0), ("Backpack" , 65.0),
+        };
         
         int TimesTraveled=0;
         bool continueGame=true;
@@ -52,18 +60,21 @@ public class Program {
             Console.Clear();
             Console.WriteLine("Checking inventory...");
             PlayerOne.checkInventory();
-            // Console.ReadKey();
+            Console.WriteLine("Press 'Enter' to Continue");
+            Console.ReadKey();
             break;
             case "2":
             Console.WriteLine("Checking the local markets...");
             checkLocalMarkets(CurrentCity);
-            // Console.ReadKey();
+            Console.WriteLine("Press 'Enter' to Continue");
+            Console.ReadKey();
             break;
             case "3":
             Console.Clear();
             Console.WriteLine("Checking out...");
             checkOut(CurrentCity, PlayerOne, Catalog);
-            // Console.ReadKey();
+            Console.WriteLine("Press 'Enter' to Continue");
+            Console.ReadKey();
             break;
             case "4":
             Console.Clear();
@@ -125,10 +136,12 @@ public class Program {
         Merchant Merchant1 = new Merchant("Jonathan");
         Merchant1.Mood = Enum.Parse<BarterMood>("Generous");
         Merchant1.Inventory.Add("Nike Running Shoes");
+        Merchant1.Inventory.Add("Backpack");
 
         Merchant Merchant2 = new Merchant("Laura");
         Merchant2.Mood = Enum.Parse<BarterMood>("Stingy");
         Merchant2.Inventory.Add("Radio");
+        Merchant2.Inventory.Add("Sleeping Bag");
 
         result.Add (Merchant1);
         result.Add (Merchant2);
@@ -140,6 +153,7 @@ public class Program {
         Merchant Merchant1 = new Merchant("Terra");
         Merchant1.Mood = Enum.Parse<BarterMood>("Stingy");
         Merchant1.Inventory.Add("Rare Pokemon Cards");
+        Merchant1.Inventory.Add("Telescope");
 
         result.Add (Merchant1);
         return result;
@@ -170,6 +184,7 @@ public class Program {
             m.Money += price;
             m.Inventory.Remove(itemLabel);
             p.Inventory.Add(itemLabel);
+            Console.WriteLine($"Player Money: {p.Money:C2}");
         } else {
             Console.WriteLine("Price is not good.");
         }
@@ -197,10 +212,6 @@ public class Program {
 
     public static void checkLocalMarkets(List<Merchant> Market)
     {
-        // Too direct, give player hints instead
-        // Generous: Console.WriteLine("This Merchant went on a nice date last night. I bet he's in a good mood.");
-        // Neutral: Console.WriteLine("This Merchant has had a few good customers and a few bad customers today.");
-        // Stingy: Console.WriteLine("Oh no! This Merchant just spilled a cup of coffee on themselves.");
         foreach (Merchant vendor in Market){
             System.Console.WriteLine($"{vendor.Name} is {vendor.Mood}.");
         }
@@ -228,6 +239,7 @@ public class Program {
             MakeSalePlayer(PlayerOne, seller, product, catalog);
         } else if (buyOrSell == "2") {
             System.Console.WriteLine("What would you like to sell?");
+            Console.WriteLine("Enter the number of the item to select it.");
             PlayerOne.checkInventory();
             string? product = Console.ReadLine();
             string playerItem;
