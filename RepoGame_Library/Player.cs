@@ -9,7 +9,13 @@ public class Player
         Inventory = new List<string>();
         Money = 250.00;
     }
-
+    public Player(params string[] items) {
+        Inventory = new List<string>();
+        foreach (string item in items) {
+            Inventory.Add(item);
+        }
+        Money = 250.00;
+    }
     public bool CheckPrice(double price) {
         if (price > Money) {
             return false;

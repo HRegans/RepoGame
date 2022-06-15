@@ -28,24 +28,20 @@ public class Program {
         System.Console.WriteLine("\n*******************************");
         System.Console.WriteLine("*         Ranking System      *");
         System.Console.WriteLine("*******************************");
-        System.Console.WriteLine("*      Gold >>>> $850.00      *");
+        System.Console.WriteLine("*      Gold   >>>> $850.00    *");
         System.Console.WriteLine("*      Silver >>>> $650.00    *");
         System.Console.WriteLine("*      Bronze >>>> $450.00    *");
         System.Console.WriteLine("*******************************\n");
 
         // Game Setup
-        Player PlayerOne = new Player();
-        PlayerOne.Inventory.Add("Bicycle");
-        PlayerOne.Inventory.Add("Xbox");
-        PlayerOne.Inventory.Add("Tent");
-        PlayerOne.Inventory.Add("Sunglasses");
+        Player PlayerOne = new Player("Bicycle", "Xbox", "Tent", "Sunglasses");
         List<Merchant> CurrentCity=new List<Merchant>();
         
         // Universal -- items will have global prices, so catalog should only to be made once
         List<(string,double)> Catalog = new List<(string, double)>{
             ("Television" , 50.0), ("Radio" , 35.0), ("Xbox" , 350.0), ("Bicycle" , 85.0),
             ("Tent" , 65.0), ("Cellphone" , 450.0), ("Nike Running Shoes" , 120.0), ("Sleeping Bag" , 85.00),
-            ("Rare Pokemon Cards" , 600.0), ("Sunglasses" , 50.0), ("Skateboard" , 180.0), ("Flashlight" , 15.0),
+            ("Rare Pokemon Cards" , 450.0), ("Sunglasses" , 50.0), ("Skateboard" , 180.0), ("Flashlight" , 15.0),
             ("Telescope" , 350.0), ("Backpack" , 65.0),
         };
         
@@ -87,15 +83,21 @@ public class Program {
             {
             case 0:
             CurrentCity=CreateCityOne();
-            System.Console.WriteLine("Arrived at Austin, Texas.");
+            System.Console.WriteLine("***************************");
+            System.Console.WriteLine("*Arrived in Austin, Texas.*");
+            System.Console.WriteLine("***************************");
             break;
             case 1:
             CurrentCity=CreateCityTwo();
-            System.Console.WriteLine("Now in New York City.");
+            System.Console.WriteLine("***********************");
+            System.Console.WriteLine("*Now in New York City.*");
+            System.Console.WriteLine("***********************");
             break;
             case 2:
             CurrentCity=CreateCityThree();
-            System.Console.WriteLine("Made it to San Francisco, California.");
+            System.Console.WriteLine("******************************************************************************************");
+            System.Console.WriteLine("*Made it to San Francisco, California. There's rumors of a really rare item in this shop.*");
+            System.Console.WriteLine("******************************************************************************************");
             break;
             default:
             Console.WriteLine("Sorry, no airlines are running right now. Let's see how much profit you've made...");
@@ -224,7 +226,7 @@ public class Program {
     public static void checkLocalMarkets(List<Merchant> Market)
     {
         foreach (Merchant vendor in Market){
-            System.Console.WriteLine($"{vendor.Name} is {vendor.Mood}.");
+            System.Console.WriteLine($"A Merchant here is feeling {vendor.Mood}.");
         }
     }
 
@@ -234,7 +236,8 @@ public class Program {
         string? buyOrSell = Console.ReadLine();
 
         if (buyOrSell == "1") {
-            System.Console.WriteLine("What would you like to buy?");
+            System.Console.WriteLine("What would you like to buy?\n"
+            +"Type the name of the item you want to purchase.");
             ShowMerch(Market, catalog);
 
             string? product = Console.ReadLine();
@@ -287,6 +290,12 @@ public class Program {
     public static void CashOutPlayer(Player playerOne, List<(string label, double basePrice)> catalog) {
         System.Console.WriteLine("Cashing out your remaining inventory...");
         foreach (string itemLabel in playerOne.Inventory) {
+            if (itemLabel == "Rare Pokemon Cards") {
+                int chance=new Random().Next(50);
+            if (chance%2 == 0) {
+                playerOne.Money += 400;
+            }
+            }
             playerOne.Money += catalog.Find(item => item.label == itemLabel).basePrice;
         }
         System.Console.WriteLine($"You ended up with {playerOne.Money:C2}.");
@@ -294,13 +303,21 @@ public class Program {
 
     public static void TallyFinalScore(double playerMoney) {
         if (playerMoney >= 850.0) {
-            System.Console.WriteLine("#### Congrats! Gold Medal earned! ####");
+            System.Console.WriteLine("****************************************");
+            System.Console.WriteLine("*#### Congrats! Gold Medal earned! ####*");
+            System.Console.WriteLine("****************************************");
         } else if (playerMoney >= 650.0 && playerMoney < 850.0) {
-            System.Console.WriteLine("*** Not bad. Silver Medal earned! ***");
+            System.Console.WriteLine("***************************************");
+            System.Console.WriteLine("*--- Not bad. Silver Medal earned! ---*");
+            System.Console.WriteLine("***************************************");
         } else if (playerMoney >= 450.0 && playerMoney < 650.0) {
-            System.Console.WriteLine("-- Chump change. Bronze Medal earned. --");
+            System.Console.WriteLine("******************************************");
+            System.Console.WriteLine("*-- Chump change. Bronze Medal earned. --*");
+            System.Console.WriteLine("******************************************");
         } else {
-            System.Console.WriteLine("_ Better luck next time. _");
+            System.Console.WriteLine("****************************");
+            System.Console.WriteLine("*_ Better luck next time. _*");
+            System.Console.WriteLine("****************************");
         }
     }
 }
