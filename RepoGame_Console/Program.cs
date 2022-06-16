@@ -1,5 +1,6 @@
 ﻿using RepoGame_Library;
 public class Program {
+    // * Program within program versus how we did it in console app project
     public static void Main() {
         Console.BackgroundColor=ConsoleColor.DarkBlue;
         Console.WriteLine("~~~~ Welcome to Money Grubbers Express ~~~~");
@@ -24,7 +25,6 @@ public class Program {
         "* You will see a list of numbered options below, these will control your actions throughout the game.\n"+
         "* Looks like there's nothing in this city. Travel to the next one to start your journey!");
 
-        // 850 - 650 - 450
         System.Console.WriteLine("\n*******************************");
         System.Console.WriteLine("*         Ranking System      *");
         System.Console.WriteLine("*******************************");
@@ -33,11 +33,11 @@ public class Program {
         System.Console.WriteLine("*      Bronze >>>> $450.00    *");
         System.Console.WriteLine("*******************************\n");
 
-        // Game Setup
+        // * Game setup, data that exists throughout the whole game
         Player PlayerOne = new Player("Bicycle", "Xbox", "Tent", "Sunglasses");
         List<Merchant> CurrentCity=new List<Merchant>();
         
-        // Universal -- items will have global prices, so catalog should only to be made once
+        // * Universal -- items will have global prices, so catalog should only to be made once
         List<(string,double)> Catalog = new List<(string, double)>{
             ("Television" , 50.0), ("Radio" , 35.0), ("Xbox" , 350.0), ("Bicycle" , 85.0),
             ("Tent" , 65.0), ("Cellphone" , 450.0), ("Nike Running Shoes" , 120.0), ("Sleeping Bag" , 85.00),
@@ -54,6 +54,7 @@ public class Program {
         Console.WriteLine("Press 4 to Move to next city");
         Console.WriteLine("Press 5 to Quit Game\n");
         string? playerCommand=Console.ReadLine();
+        // ! We have a switch case inside of a switch case
         switch (playerCommand)
         {
             case "1":
@@ -261,8 +262,14 @@ public class Program {
             string? product = Console.ReadLine();
             string playerItem;
             if (product != "" || product != null) {
+                if (PlayerOne.Inventory.Count > 0){
+                    
                 int index = Convert.ToInt32(product);
                 playerItem = PlayerOne.Inventory[index -1];
+                } else {
+                    Console.WriteLine("Player inventory is empty. Returning to Menu...");
+                    return;
+                }
             } else {
                 Console.WriteLine("Item not found.");
                 return;
